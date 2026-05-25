@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cjakjy6165om4"]
+
+[resource]
+resource_name = "M_Joints"
+cull_mode = 2
+albedo_color = Color(0.6654698, 0.39817953, 0.8581861, 1)
+roughness = 0.5

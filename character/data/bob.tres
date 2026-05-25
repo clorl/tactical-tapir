@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Character" format=3 uid="uid://b8y4u4tlfqv5q"]
+
+[ext_resource type="Script" uid="uid://dcbe6rw42nhva" path="res://character/character.gd" id="1_0rxof"]
+[ext_resource type="Texture2D" uid="uid://eumkmjps2r3m" path="res://misc/portraits_placeholder.png" id="1_ggk70"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ggk70"]
+atlas = ExtResource("1_ggk70")
+region = Rect2(879.01056, 18.470154, 266.44818, 436.22052)
+
+[resource]
+script = ExtResource("1_0rxof")
+name = "Bob"
+portrait = SubResource("AtlasTexture_ggk70")
+metadata/_custom_type_script = "uid://dcbe6rw42nhva"

@@ -1,0 +1,247 @@
+[gd_scene format=3 uid="uid://26brom4p3ckd"]
+
+[ext_resource type="PackedScene" uid="uid://q03vw7lcwir6" path="res://thirdparty/ual/female-mannequin/Mannequin_F.glb" id="1_x168a"]
+[ext_resource type="Animation" uid="uid://t48iw4u44p3w" path="res://thirdparty/ual/anims/A_TPose.res" id="2_n2gi4"]
+[ext_resource type="Animation" uid="uid://cw68gpichv7bm" path="res://thirdparty/ual/anims/Chest_Open.res" id="3_u7imx"]
+[ext_resource type="Animation" uid="uid://m61j1r5cf85h" path="res://thirdparty/ual/anims/ClimbUp_1m_RM.res" id="4_f0elk"]
+[ext_resource type="Animation" uid="uid://d0ptsouhob8hs" path="res://thirdparty/ual/anims/Consume.res" id="5_eja2u"]
+[ext_resource type="Animation" uid="uid://bekloqx8unxgo" path="res://thirdparty/ual/anims/Crouch_Fwd.res" id="6_dgtml"]
+[ext_resource type="Animation" uid="uid://urww5qpw44xq" path="res://thirdparty/ual/anims/Crouch_Idle.res" id="7_pe4qo"]
+[ext_resource type="Animation" uid="uid://dbxradtegk5tl" path="res://thirdparty/ual/anims/Dance.res" id="8_o10wt"]
+[ext_resource type="Animation" uid="uid://bs04e4luqjkbi" path="res://thirdparty/ual/anims/Death01.res" id="9_pgptt"]
+[ext_resource type="Animation" uid="uid://divdmbh2efavb" path="res://thirdparty/ual/anims/Driving.res" id="10_cfq41"]
+[ext_resource type="Animation" uid="uid://d25fbntq0a0np" path="res://thirdparty/ual/anims/Farm_Harvest.res" id="11_m4scq"]
+[ext_resource type="Animation" uid="uid://bsolied451882" path="res://thirdparty/ual/anims/Farm_PlantSeed.res" id="12_e22b2"]
+[ext_resource type="Animation" uid="uid://t23t6l6lodh1" path="res://thirdparty/ual/anims/Farm_Watering.res" id="13_iyyaj"]
+[ext_resource type="Animation" uid="uid://bw34sqiyan3gp" path="res://thirdparty/ual/anims/Fixing_Kneeling.res" id="14_1dfd1"]
+[ext_resource type="Animation" uid="uid://crnp0ti70bnua" path="res://thirdparty/ual/anims/Hit_Chest.res" id="15_ycmqs"]
+[ext_resource type="Animation" uid="uid://b48d1f0uti5wi" path="res://thirdparty/ual/anims/Hit_Head.res" id="16_5ysix"]
+[ext_resource type="Animation" uid="uid://ccdccn3avk6w7" path="res://thirdparty/ual/anims/Hit_Knockback.res" id="17_rf4am"]
+[ext_resource type="Animation" uid="uid://buna0oeq428dc" path="res://thirdparty/ual/anims/Hit_Knockback_RM.res" id="18_nb5ul"]
+[ext_resource type="Animation" uid="uid://cd0ho43nxm6i2" path="res://thirdparty/ual/anims/Idle.res" id="19_5cecv"]
+[ext_resource type="Animation" uid="uid://cnlwh5eugb35b" path="res://thirdparty/ual/anims/Idle_FoldArms.res" id="20_dbld4"]
+[ext_resource type="Animation" uid="uid://bkpeknvk28tql" path="res://thirdparty/ual/anims/Idle_Lantern.res" id="21_rqwie"]
+[ext_resource type="Animation" uid="uid://moderwtupryf" path="res://thirdparty/ual/anims/Idle_No.res" id="22_ne10j"]
+[ext_resource type="Animation" uid="uid://ccej7nhs4gdsj" path="res://thirdparty/ual/anims/Idle_Rail.res" id="23_qg7k8"]
+[ext_resource type="Animation" uid="uid://dtuh2esdp1na7" path="res://thirdparty/ual/anims/Idle_Rail_Call.res" id="24_fpxhv"]
+[ext_resource type="Animation" uid="uid://bdlceeqrgemqe" path="res://thirdparty/ual/anims/Idle_Shield.res" id="25_gld84"]
+[ext_resource type="Animation" uid="uid://4bri3vmyctql" path="res://thirdparty/ual/anims/Idle_Shield_Break.res" id="26_8nj8b"]
+[ext_resource type="Animation" uid="uid://4lxcldj7k52f" path="res://thirdparty/ual/anims/Idle_Talking.res" id="27_3yx72"]
+[ext_resource type="Animation" uid="uid://bs44uaxfah6os" path="res://thirdparty/ual/anims/Idle_TalkingPhone.res" id="28_dt1lf"]
+[ext_resource type="Animation" uid="uid://b7gt1h5gfovpd" path="res://thirdparty/ual/anims/Idle_Torch.res" id="29_4vx3c"]
+[ext_resource type="Animation" uid="uid://dhvyoohhudrc1" path="res://thirdparty/ual/anims/Interact.res" id="30_bkrsn"]
+[ext_resource type="Animation" uid="uid://dgsptxbei00wo" path="res://thirdparty/ual/anims/Jog_Fwd.res" id="31_uuva1"]
+[ext_resource type="Animation" uid="uid://4obtu8fjte2r" path="res://thirdparty/ual/anims/Jump.res" id="32_2462s"]
+[ext_resource type="Animation" uid="uid://77jylejcgihv" path="res://thirdparty/ual/anims/Jump_Land.res" id="33_bhj4v"]
+[ext_resource type="Animation" uid="uid://c52ulk7dqfxti" path="res://thirdparty/ual/anims/Jump_Start.res" id="34_geus8"]
+[ext_resource type="Animation" uid="uid://bv5txh1aexcbn" path="res://thirdparty/ual/anims/LayToIdle.res" id="35_imhxi"]
+[ext_resource type="Animation" uid="uid://b0huh8fm7ts4u" path="res://thirdparty/ual/anims/Melee_Hook.res" id="36_5uvib"]
+[ext_resource type="Animation" uid="uid://decfwse1xmvlc" path="res://thirdparty/ual/anims/Melee_Hook_Rec.res" id="37_nogfe"]
+[ext_resource type="Animation" uid="uid://dty2msjuebdbh" path="res://thirdparty/ual/anims/NinjaJump_Idle.res" id="38_apmyy"]
+[ext_resource type="Animation" uid="uid://b6tet6dplnay7" path="res://thirdparty/ual/anims/NinjaJump_Land.res" id="39_kkrep"]
+[ext_resource type="Animation" uid="uid://dtmhv4pk5me44" path="res://thirdparty/ual/anims/NinjaJump_Start.res" id="40_o1cv7"]
+[ext_resource type="Animation" uid="uid://bsxukle7cf2ca" path="res://thirdparty/ual/anims/OverhandThrow.res" id="41_k5rak"]
+[ext_resource type="Animation" uid="uid://c8531ngfeuh3q" path="res://thirdparty/ual/anims/PickUp_Table.res" id="42_68167"]
+[ext_resource type="Animation" uid="uid://cbxcwa53iyjrh" path="res://thirdparty/ual/anims/Pistol_Aim_Down.res" id="43_qdd6d"]
+[ext_resource type="Animation" uid="uid://tuqxf0g6bg6y" path="res://thirdparty/ual/anims/Pistol_Aim_Neutral.res" id="44_6f6el"]
+[ext_resource type="Animation" uid="uid://cbqto7yneur0y" path="res://thirdparty/ual/anims/Pistol_Aim_Up.res" id="45_qryyl"]
+[ext_resource type="Animation" uid="uid://dtsh8d70d3med" path="res://thirdparty/ual/anims/Pistol_Idle.res" id="46_ijsoj"]
+[ext_resource type="Animation" uid="uid://djl58c7ajdq5v" path="res://thirdparty/ual/anims/Pistol_Reload.res" id="47_lkflw"]
+[ext_resource type="Animation" uid="uid://d3bl6lbr8glu" path="res://thirdparty/ual/anims/Pistol_Shoot.res" id="48_dr3gu"]
+[ext_resource type="Animation" uid="uid://c8oots635ih3b" path="res://thirdparty/ual/anims/Punch_Cross.res" id="49_hwvem"]
+[ext_resource type="Animation" uid="uid://do5ybu0fnk514" path="res://thirdparty/ual/anims/Punch_Jab.res" id="50_xg8yh"]
+[ext_resource type="Animation" uid="uid://h817bmqtxq1n" path="res://thirdparty/ual/anims/Push.res" id="51_j1d1g"]
+[ext_resource type="Animation" uid="uid://duxre6nrn5uci" path="res://thirdparty/ual/anims/Roll.res" id="52_bir3o"]
+[ext_resource type="Animation" uid="uid://dp1iepbxp2e64" path="res://thirdparty/ual/anims/Roll_RM.res" id="53_txc55"]
+[ext_resource type="Animation" uid="uid://4kwuiaq16nq1" path="res://thirdparty/ual/anims/Shield_Dash_RM.res" id="54_wc810"]
+[ext_resource type="Animation" uid="uid://cq6xfdfir5sc4" path="res://thirdparty/ual/anims/Shield_OneShot.res" id="55_e2h44"]
+[ext_resource type="Animation" uid="uid://seqpdm4gycau" path="res://thirdparty/ual/anims/Sitting_Enter.res" id="56_x6ieu"]
+[ext_resource type="Animation" uid="uid://ex8r6q7pj4hs" path="res://thirdparty/ual/anims/Sitting_Exit.res" id="57_52tw4"]
+[ext_resource type="Animation" uid="uid://dadekg8xj2yrw" path="res://thirdparty/ual/anims/Sitting_Idle.res" id="58_vcqwh"]
+[ext_resource type="Animation" uid="uid://gtutgg3hs77t" path="res://thirdparty/ual/anims/Sitting_Talking.res" id="59_qmn50"]
+[ext_resource type="Animation" uid="uid://bwyk5at8hipaj" path="res://thirdparty/ual/anims/Slide.res" id="60_85dv0"]
+[ext_resource type="Animation" uid="uid://djk33g7fnys78" path="res://thirdparty/ual/anims/Slide_Exit.res" id="61_waf6r"]
+[ext_resource type="Animation" uid="uid://dva5qwm2h77va" path="res://thirdparty/ual/anims/Slide_Start.res" id="62_niiyr"]
+[ext_resource type="Animation" uid="uid://dwae4syuhstc1" path="res://thirdparty/ual/anims/Spell_Simple_Enter.res" id="63_lwnou"]
+[ext_resource type="Animation" uid="uid://dx8abpu3ekgcn" path="res://thirdparty/ual/anims/Spell_Simple_Exit.res" id="64_duxqo"]
+[ext_resource type="Animation" uid="uid://b426bpdu7wo76" path="res://thirdparty/ual/anims/Spell_Simple_Idle.res" id="65_t817y"]
+[ext_resource type="Animation" uid="uid://ckd4xeyym5quc" path="res://thirdparty/ual/anims/Spell_Simple_Shoot.res" id="66_mkryi"]
+[ext_resource type="Animation" uid="uid://bqenw4pncntur" path="res://thirdparty/ual/anims/Sprint.res" id="67_6wllf"]
+[ext_resource type="Animation" uid="uid://hifgqlnuyj2b" path="res://thirdparty/ual/anims/Swim_Fwd.res" id="68_ybima"]
+[ext_resource type="Animation" uid="uid://c35bur1843p83" path="res://thirdparty/ual/anims/Swim_Idle.res" id="69_40fqy"]
+[ext_resource type="Animation" uid="uid://jn1kawglwwua" path="res://thirdparty/ual/anims/Sword_Attack.res" id="70_xg66s"]
+[ext_resource type="Animation" uid="uid://ddrqq1jlojy8c" path="res://thirdparty/ual/anims/Sword_Attack_RM.res" id="71_oxrxm"]
+[ext_resource type="Animation" uid="uid://dtabjdxstr00c" path="res://thirdparty/ual/anims/Sword_Block.res" id="72_cm5db"]
+[ext_resource type="Animation" uid="uid://8ptlsktyhbio" path="res://thirdparty/ual/anims/Sword_Dash_RM.res" id="73_er081"]
+[ext_resource type="Animation" uid="uid://1cymdfb4x27l" path="res://thirdparty/ual/anims/Sword_Idle.res" id="74_xchrj"]
+[ext_resource type="Animation" uid="uid://blj6hhcnrbi4w" path="res://thirdparty/ual/anims/Sword_Regular_A.res" id="75_1mqdv"]
+[ext_resource type="Animation" uid="uid://cjveiiir7cx5a" path="res://thirdparty/ual/anims/Sword_Regular_A_Rec.res" id="76_h2nd3"]
+[ext_resource type="Animation" uid="uid://chmft84c42g2f" path="res://thirdparty/ual/anims/Sword_Regular_B.res" id="77_jcej6"]
+[ext_resource type="Animation" uid="uid://deedr6436uimv" path="res://thirdparty/ual/anims/Sword_Regular_B_Rec.res" id="78_xx1gs"]
+[ext_resource type="Animation" uid="uid://cf2jao3enwc25" path="res://thirdparty/ual/anims/Sword_Regular_C.res" id="79_taqxp"]
+[ext_resource type="Animation" uid="uid://ma4ay141pp0s" path="res://thirdparty/ual/anims/Sword_Regular_Combo.res" id="80_184p3"]
+[ext_resource type="Animation" uid="uid://brus08puf5mkf" path="res://thirdparty/ual/anims/TreeChopping.res" id="81_xv1kb"]
+[ext_resource type="Animation" uid="uid://dvl3j106wdpci" path="res://thirdparty/ual/anims/Walk.res" id="82_87aio"]
+[ext_resource type="Animation" uid="uid://c2au1trxkuvai" path="res://thirdparty/ual/anims/Walk_Carry.res" id="83_4pjqo"]
+[ext_resource type="Animation" uid="uid://o62u4sq11jvw" path="res://thirdparty/ual/anims/Walk_Formal.res" id="84_gkhx3"]
+[ext_resource type="Animation" uid="uid://bs7v0c5tnyafn" path="res://thirdparty/ual/anims/Yes.res" id="85_krvc6"]
+[ext_resource type="Animation" uid="uid://c8a0skip8qgbm" path="res://thirdparty/ual/anims/Zombie_Idle.res" id="86_i1jsm"]
+[ext_resource type="Animation" uid="uid://bfikj5xvyv77k" path="res://thirdparty/ual/anims/Zombie_Scratch.res" id="87_k1fko"]
+[ext_resource type="Animation" uid="uid://b57h07m3uhyg7" path="res://thirdparty/ual/anims/Zombie_Walk_Fwd.res" id="88_ry2kg"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_t7fmw"]
+_data = {
+&"A_TPose": ExtResource("2_n2gi4"),
+&"Chest_Open": ExtResource("3_u7imx"),
+&"ClimbUp_1m_RM": ExtResource("4_f0elk"),
+&"Consume": ExtResource("5_eja2u"),
+&"Crouch_Fwd": ExtResource("6_dgtml"),
+&"Crouch_Idle": ExtResource("7_pe4qo"),
+&"Dance": ExtResource("8_o10wt"),
+&"Death01": ExtResource("9_pgptt"),
+&"Driving": ExtResource("10_cfq41"),
+&"Farm_Harvest": ExtResource("11_m4scq"),
+&"Farm_PlantSeed": ExtResource("12_e22b2"),
+&"Farm_Watering": ExtResource("13_iyyaj"),
+&"Fixing_Kneeling": ExtResource("14_1dfd1"),
+&"Hit_Chest": ExtResource("15_ycmqs"),
+&"Hit_Head": ExtResource("16_5ysix"),
+&"Hit_Knockback": ExtResource("17_rf4am"),
+&"Hit_Knockback_RM": ExtResource("18_nb5ul"),
+&"Idle": ExtResource("19_5cecv"),
+&"Idle_FoldArms": ExtResource("20_dbld4"),
+&"Idle_Lantern": ExtResource("21_rqwie"),
+&"Idle_No": ExtResource("22_ne10j"),
+&"Idle_Rail": ExtResource("23_qg7k8"),
+&"Idle_Rail_Call": ExtResource("24_fpxhv"),
+&"Idle_Shield": ExtResource("25_gld84"),
+&"Idle_Shield_Break": ExtResource("26_8nj8b"),
+&"Idle_Talking": ExtResource("27_3yx72"),
+&"Idle_TalkingPhone": ExtResource("28_dt1lf"),
+&"Idle_Torch": ExtResource("29_4vx3c"),
+&"Interact": ExtResource("30_bkrsn"),
+&"Jog_Fwd": ExtResource("31_uuva1"),
+&"Jump": ExtResource("32_2462s"),
+&"Jump_Land": ExtResource("33_bhj4v"),
+&"Jump_Start": ExtResource("34_geus8"),
+&"LayToIdle": ExtResource("35_imhxi"),
+&"Melee_Hook": ExtResource("36_5uvib"),
+&"Melee_Hook_Rec": ExtResource("37_nogfe"),
+&"NinjaJump_Idle": ExtResource("38_apmyy"),
+&"NinjaJump_Land": ExtResource("39_kkrep"),
+&"NinjaJump_Start": ExtResource("40_o1cv7"),
+&"OverhandThrow": ExtResource("41_k5rak"),
+&"PickUp_Table": ExtResource("42_68167"),
+&"Pistol_Aim_Down": ExtResource("43_qdd6d"),
+&"Pistol_Aim_Neutral": ExtResource("44_6f6el"),
+&"Pistol_Aim_Up": ExtResource("45_qryyl"),
+&"Pistol_Idle": ExtResource("46_ijsoj"),
+&"Pistol_Reload": ExtResource("47_lkflw"),
+&"Pistol_Shoot": ExtResource("48_dr3gu"),
+&"Punch_Cross": ExtResource("49_hwvem"),
+&"Punch_Jab": ExtResource("50_xg8yh"),
+&"Push": ExtResource("51_j1d1g"),
+&"Roll": ExtResource("52_bir3o"),
+&"Roll_RM": ExtResource("53_txc55"),
+&"Shield_Dash_RM": ExtResource("54_wc810"),
+&"Shield_OneShot": ExtResource("55_e2h44"),
+&"Sitting_Enter": ExtResource("56_x6ieu"),
+&"Sitting_Exit": ExtResource("57_52tw4"),
+&"Sitting_Idle": ExtResource("58_vcqwh"),
+&"Sitting_Talking": ExtResource("59_qmn50"),
+&"Slide": ExtResource("60_85dv0"),
+&"Slide_Exit": ExtResource("61_waf6r"),
+&"Slide_Start": ExtResource("62_niiyr"),
+&"Spell_Simple_Enter": ExtResource("63_lwnou"),
+&"Spell_Simple_Exit": ExtResource("64_duxqo"),
+&"Spell_Simple_Idle": ExtResource("65_t817y"),
+&"Spell_Simple_Shoot": ExtResource("66_mkryi"),
+&"Sprint": ExtResource("67_6wllf"),
+&"Swim_Fwd": ExtResource("68_ybima"),
+&"Swim_Idle": ExtResource("69_40fqy"),
+&"Sword_Attack": ExtResource("70_xg66s"),
+&"Sword_Attack_RM": ExtResource("71_oxrxm"),
+&"Sword_Block": ExtResource("72_cm5db"),
+&"Sword_Dash_RM": ExtResource("73_er081"),
+&"Sword_Idle": ExtResource("74_xchrj"),
+&"Sword_Regular_A": ExtResource("75_1mqdv"),
+&"Sword_Regular_A_Rec": ExtResource("76_h2nd3"),
+&"Sword_Regular_B": ExtResource("77_jcej6"),
+&"Sword_Regular_B_Rec": ExtResource("78_xx1gs"),
+&"Sword_Regular_C": ExtResource("79_taqxp"),
+&"Sword_Regular_Combo": ExtResource("80_184p3"),
+&"TreeChopping": ExtResource("81_xv1kb"),
+&"Walk": ExtResource("82_87aio"),
+&"Walk_Carry": ExtResource("83_4pjqo"),
+&"Walk_Formal": ExtResource("84_gkhx3"),
+&"Yes": ExtResource("85_krvc6"),
+&"Zombie_Idle": ExtResource("86_i1jsm"),
+&"Zombie_Scratch": ExtResource("87_k1fko"),
+&"Zombie_Walk_Fwd": ExtResource("88_ry2kg")
+}
+
+[node name="MannequinF" unique_id=381341569 instance=ExtResource("1_x168a")]
+
+[node name="GeneralSkeleton" parent="Armature" parent_id_path=PackedInt32Array(1309252157) index="0" unique_id=1910262268]
+bones/1/position = Vector3(0.0053169443, 0.87717235, -0.08649441)
+bones/1/rotation = Quaternion(-0.04628033, -0.11588846, -0.005405691, 0.9921687)
+bones/3/rotation = Quaternion(0.09260246, 0.000112654714, 0.00025388045, 0.99570316)
+bones/4/rotation = Quaternion(0.092602395, 0.00032065847, 0.00024720546, 0.9957031)
+bones/5/rotation = Quaternion(-0.09260248, -0.00021697924, -0.0002602538, 0.9957031)
+bones/6/rotation = Quaternion(0.07725409, 0.0957206, 0.007964551, 0.99237394)
+bones/7/rotation = Quaternion(0.48748106, 0.52661544, 0.52638143, -0.4560275)
+bones/8/rotation = Quaternion(-0.06222128, 0.8176802, -0.5722163, 0.00980104)
+bones/9/rotation = Quaternion(0.18998532, -0.651041, 0.18306458, 0.7117153)
+bones/10/rotation = Quaternion(0.09913024, 0.70686626, 0.0629003, 0.69753635)
+bones/11/rotation = Quaternion(0.6295969, -4.0978193e-08, -4.61936e-06, 0.77692205)
+bones/12/rotation = Quaternion(0.62334186, 2.9802322e-08, -4.261732e-06, 0.78194946)
+bones/13/rotation = Quaternion(0.62334144, -2.2351742e-07, -4.4703484e-06, 0.78194976)
+bones/15/rotation = Quaternion(0.6288943, -0.0297349, -4.470348e-06, 0.7769219)
+bones/16/rotation = Quaternion(0.6227327, -0.02755458, -4.410744e-06, 0.7819494)
+bones/17/rotation = Quaternion(0.6226684, -0.028961532, -4.4703493e-06, 0.78194976)
+bones/19/rotation = Quaternion(0.6630008, -0.044529784, 0.07369417, 0.7436506)
+bones/20/rotation = Quaternion(0.6203661, -0.06229401, 0.015573084, 0.7816796)
+bones/21/rotation = Quaternion(0.62192154, -0.04205184, -4.4703484e-06, 0.78194964)
+bones/23/rotation = Quaternion(0.6291978, -0.022414071, -4.202128e-06, 0.77692205)
+bones/24/rotation = Quaternion(0.6229472, -0.022176376, -4.321337e-06, 0.78194946)
+bones/25/rotation = Quaternion(0.6228982, -0.023505477, -4.5001498e-06, 0.7819497)
+bones/27/rotation = Quaternion(-0.123819165, 0.7195233, 0.2018354, 0.65285325)
+bones/28/rotation = Quaternion(0.18180694, 0.11012423, 0.060063303, 0.9753006)
+bones/29/rotation = Quaternion(0.5994299, 0.27396563, 0.19463211, 0.7264606)
+bones/30/scale = Vector3(1.0001454, 1.0004877, 1.0005833)
+bones/31/rotation = Quaternion(0.53972095, -0.47448963, -0.47470158, -0.5081529)
+bones/32/rotation = Quaternion(0.089077465, 0.82466066, -0.5584877, -0.009565941)
+bones/33/rotation = Quaternion(0.29214105, 0.54285806, -0.20492761, 0.760239)
+bones/34/rotation = Quaternion(0.12024976, -0.69903094, -0.056890074, 0.702609)
+bones/35/rotation = Quaternion(0.6295971, 3.7252903e-08, 4.172325e-06, 0.7769218)
+bones/36/rotation = Quaternion(0.62334144, 1.825392e-07, 4.470348e-06, 0.7819497)
+bones/37/rotation = Quaternion(0.62334156, 1.00582824e-07, 4.2319293e-06, 0.78194964)
+bones/38/rotation = Quaternion(4.656613e-09, 1, 4.295285e-08, -5.7654454e-08)
+bones/39/rotation = Quaternion(0.6288947, 0.029734796, 4.351139e-06, 0.77692175)
+bones/40/rotation = Quaternion(0.62273216, 0.027554482, 4.5001507e-06, 0.78194976)
+bones/41/rotation = Quaternion(0.62266874, 0.028961398, 4.3213377e-06, 0.78194946)
+bones/42/rotation = Quaternion(-0.02323703, 0.99973, 1.33009905e-08, -1.4671618e-07)
+bones/43/rotation = Quaternion(0.6630007, 0.044529956, -0.07369393, 0.7436508)
+bones/44/rotation = Quaternion(0.62036633, 0.06229363, -0.015572906, 0.7816794)
+bones/45/rotation = Quaternion(0.62192184, 0.04205143, 4.4703484e-06, 0.7819494)
+bones/46/rotation = Quaternion(-0.03375008, 0.99943036, 4.924054e-08, -5.6300287e-08)
+bones/47/rotation = Quaternion(0.6291981, 0.022413792, 4.11272e-06, 0.7769218)
+bones/48/rotation = Quaternion(0.62294656, 0.022176204, 4.470349e-06, 0.7819501)
+bones/49/rotation = Quaternion(0.6228987, 0.02350526, 4.1723247e-06, 0.7819493)
+bones/50/rotation = Quaternion(-0.018857837, 0.9998222, -1.5216912e-08, -2.369153e-07)
+bones/51/rotation = Quaternion(-0.12381923, -0.7195234, -0.2018356, 0.6528533)
+bones/52/rotation = Quaternion(0.18180703, -0.11012423, -0.060063303, 0.97530067)
+bones/53/rotation = Quaternion(0.5994302, -0.2739653, -0.19463223, 0.7264605)
+bones/54/scale = Vector3(1.0001454, 1.0004876, 1.0005835)
+bones/55/rotation = Quaternion(-0.00077796273, 0.12214074, 0.98626107, -0.11122178)
+bones/56/rotation = Quaternion(0.016344335, 0.98224515, -0.14901444, 0.11279213)
+bones/57/rotation = Quaternion(-0.09455208, 0.7292354, -0.67767, 0.006254539)
+bones/58/rotation = Quaternion(4.664862e-08, 1, 5.9604645e-08, 2.7766912e-08)
+bones/60/rotation = Quaternion(0.0008066073, -0.110076316, 0.9872104, 0.11531823)
+bones/61/rotation = Quaternion(-0.028729852, 0.92896134, -0.08071508, -0.36012587)
+bones/62/rotation = Quaternion(0.17156829, 0.646951, -0.74297434, -0.0027946231)
+bones/63/rotation = Quaternion(-6.703263e-08, 1, 8.940697e-08, 2.1454163e-09)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1" unique_id=1250055390]
+libraries/ual = SubResource("AnimationLibrary_t7fmw")
+autoplay = &"ual/Idle"

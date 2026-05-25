@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://hnyaobr8gvt8"]
+
+[ext_resource type="Script" uid="uid://dp33ctv3ctihv" path="res://player/party_controller.gd" id="1_hs444"]
+
+[node name="PartyController" type="Node" unique_id=713558609]
+script = ExtResource("1_hs444")

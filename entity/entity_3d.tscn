@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cx83mcyentngd"]
+
+[ext_resource type="Script" uid="uid://ddhq7g64c6sqy" path="res://entity/entity_3d.gd" id="1_dtn77"]
+[ext_resource type="PackedScene" uid="uid://dwsh15yfqwj07" path="res://misc/interactable.tscn" id="2_r6g1r"]
+
+[node name="Entity3D" type="Node3D" unique_id=1044819300]
+script = ExtResource("1_dtn77")
+
+[node name="Interactable" parent="." unique_id=895559081 instance=ExtResource("2_r6g1r")]

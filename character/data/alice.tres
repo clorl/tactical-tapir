@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Character" format=3 uid="uid://bjfoglh8wtnyj"]
+
+[ext_resource type="Script" uid="uid://dcbe6rw42nhva" path="res://character/character.gd" id="1_50u4p"]
+[ext_resource type="Texture2D" uid="uid://eumkmjps2r3m" path="res://misc/portraits_placeholder.png" id="1_nn2l5"]
+[ext_resource type="PackedScene" uid="uid://cl6rbyhwsl5ag" path="res://character/character_entity.tscn" id="2_shg7l"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nn2l5"]
+atlas = ExtResource("1_nn2l5")
+region = Rect2(11.683258, 18.384792, 271.16412, 443.29437)
+
+[resource]
+script = ExtResource("1_50u4p")
+name = "Alice"
+portrait = SubResource("AtlasTexture_nn2l5")
+scene = ExtResource("2_shg7l")
+metadata/_custom_type_script = "uid://dcbe6rw42nhva"

@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://dhxx2glch4vih"]
+
+[ext_resource type="Script" uid="uid://cdqint0vqvcro" path="res://level/level.gd" id="1_0xm2m"]
+[ext_resource type="Shader" uid="uid://cykf5ie30jih7" path="res://misc/grid.gdshader" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://hnyaobr8gvt8" path="res://player/party_controller.tscn" id="3_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://boufj2f4hhhjk" path="res://player/camera_controller.tscn" id="3_h2yge"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0xm2m"]
+render_priority = 0
+shader = ExtResource("1_ig7tw")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_h2yge"]
+size = Vector2(50, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
+albedo_color = Color(3.1766297e-06, 0.724534, 0.2688828, 1)
+
+[node name="Main" type="Node3D" unique_id=969770935]
+script = ExtResource("1_0xm2m")
+camera_scene = ExtResource("3_h2yge")
+party_controller_scene = ExtResource("3_1bvp3")
+party_ids = Array[StringName]([&"alice", &"bob"])
+
+[node name="Env" type="Node" parent="." unique_id=1634689100]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Env" unique_id=1200151577]
+material_override = SubResource("ShaderMaterial_0xm2m")
+mesh = SubResource("PlaneMesh_h2yge")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="Env" unique_id=1750111146]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Env/CSGCombiner3D" unique_id=436448706]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4897246, 2.7231488, 0.0045764446)
+size = Vector3(10, 6.4296265, 1)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Env/CSGCombiner3D" unique_id=1470794827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9306426, 2.7223554, 7.0045767)
+size = Vector3(1.1181641, 6.4280396, 15)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Env/CSGCombiner3D" unique_id=309652418]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 2.2494302, 0)
+operation = 2
+radius = 1.0834961
+height = 1.1123047
+sides = 30
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Env/CSGCombiner3D" unique_id=1120104697]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.014031887, 0.9731183, 0.0045764446)
+operation = 2
+size = Vector3(2.1230774, 2.9295654, 1)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Env" unique_id=1182824786]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.988655, 2.0000005, 5.4879274)
+size = Vector3(5, 5, 10.001953)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Env" unique_id=1690444149]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.5775433, -9.536743e-07, 0.49654478)
+polygon = PackedVector2Array(0, 0, 0, 4.48, 5, 1, 9, 1, 9, 0, 1, 0)
+depth = 5.0
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Env/CSGPolygon3D" unique_id=92229007]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5, 0, 2.3841858e-07)
+polygon = PackedVector2Array(0, 0, 0, 1, 4, 0, 1, 0, 1, 0)
+depth = 4.0
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Env" unique_id=1871386430]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.897064, 1.9450684, 10.180225)
+size = Vector3(2.5507813, 4.8901367, 1)
+material = SubResource("StandardMaterial3D_ig7tw")
+
+[node name="Marker3D" type="Marker3D" parent="." unique_id=1082898215 groups=["party_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9550986, 0, 4.7037063)
+
+[node name="Marker3D2" type="Marker3D" parent="." unique_id=432189983 groups=["party_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6964602, 0, 4.0332847)
+
+[node name="Marker3D3" type="Marker3D" parent="." unique_id=630760901 groups=["party_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.870661, 0, 5.0704308)
+
+[node name="Marker3D4" type="Marker3D" parent="." unique_id=1800853480 groups=["party_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.356539, 0, 6.3040714)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=724023892]
+transform = Transform3D(0.89347583, 0.15935108, 0.41989094, -0.44861054, 0.36081195, 0.8176573, -0.021207098, -0.91892445, 0.39386326, 0, 0, 0)
+
+[node name="CameraController" parent="." unique_id=498777517 instance=ExtResource("3_h2yge")]
+transform = Transform3D(0.70710665, -0.5416752, 0.4545195, -2.980232e-08, 0.6427876, 0.7660445, -0.70710677, -0.5416752, 0.4545194, 6, 0, 5)
+camera_distance = 6.087
+cam_distance_range = Vector2(5, 20)
+
+[node name="Camera3D" parent="CameraController" index="0" unique_id=358440723]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.087)
+
+[editable path="CameraController"]
