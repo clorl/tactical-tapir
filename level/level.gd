@@ -3,14 +3,14 @@ class_name Level
 
 @export var camera_scene: PackedScene
 @export var party_controller_scene: PackedScene
-@export_custom(Registry.PROPERTY_HINT_CUSTOM, Game.Data.paths.characters) var party_ids: Array[StringName]
+@export_custom(Registry.PROPERTY_HINT_CUSTOM, Data.PATH_CHARACTERS) var party_ids: Array[StringName]
 
 var party: Array[Character]
 
 func _ready():
 	assert(party_controller_scene)
 	for id in party_ids:
-		party.append(Game.Data.Characters.load_entry(id))
+		party.append(Data.Characters.load_entry(id))
 	spawn_party()
 
 	Game.party_controller = party_controller_scene.instantiate()

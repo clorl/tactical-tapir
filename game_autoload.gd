@@ -10,10 +10,3 @@ var party_controller: PartyController
 
 func request_camera_focus(t: Vector3):
 	camera_focus.emit(t)
-
-class Data:
-	const paths = {
-		"characters": "res://character/characters.tres"
-	}
-	
-	const Characters: Registry = preload(paths.characters)

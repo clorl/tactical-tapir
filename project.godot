@@ -18,6 +18,10 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 
 Game="*uid://iw5g8dd2nvbc"
 
+[debug]
+
+gdscript/warnings/enable=false
+
 [debug_draw_3d]
 
 settings/addon_root_folder="res://addons/debug_draw_3d"

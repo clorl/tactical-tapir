@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://1htfi48t4lwh"]
+
+[ext_resource type="Script" uid="uid://0ggoko05dxa6" path="res://character/ai/bt_player.gd" id="1_kxg6q"]
+[ext_resource type="Script" uid="uid://ccedydp5l3c2n" path="res://character/ai/behaviour_tree.gd" id="2_5cn20"]
+
+[sub_resource type="Resource" id="Resource_5cn20"]
+script = ExtResource("2_5cn20")
+debug = true
+metadata/_custom_type_script = "uid://ccedydp5l3c2n"
+
+[node name="BTPlayer" type="Node" unique_id=352084909]
+script = ExtResource("1_kxg6q")
+bt = SubResource("Resource_5cn20")
