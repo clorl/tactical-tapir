@@ -16,21 +16,18 @@ var current_path = []
 var state = {}
 
 var tree = [
-	sequence,
-		[print, "Hello", "World"],
+	sequence, [
+		[ selector, [
+				[always_fail],
+				[always_fail],
+				[print, "Hello", "World"],
+				[print, "Foo", "Bar"],
+			]
+		],
 		[delay, 1.0],
-		[print, "Goodbye", "World"],
-		[delay, 1.0],
+		[print, "PAUSE"]
+	]
 ]
-
-# var tree = [
-# 	sequence, [
-# 			[print, "Foo", "Bar"],
-# 			[delay, 5.0],
-# 			[print, "Bar", "Baz"],
-# 			[delay, 5.0],
-# 		]
-# ]
 
 func _cur_path() -> String:
 	return "/".join(current_path)
@@ -54,7 +51,6 @@ func _cbl_fmt(c):
 		return "[" + ", ".join(c.map(func(e): return _cbl_fmt(e))) + "]"
 	return str(c)
 
-var strip_length = "resource(behaviour_tree)::".length()
 func add_to_path(key: Callable):
 	current_path.append(str(key).to_snake_case())
 
@@ -93,8 +89,13 @@ func eval(sexp) -> Status:
 		var tail = sexp.slice(1)
 		if debug: _print("Node \"%s\" args: %s" % [_cbl_fmt(head), _cbl_fmt(tail)])
 		res = head.callv(tail)
-	if res == null:
-		res = Status.SUCCESS
+	if not res is Status: # Support for functions that don't return a Status
+		if res == true:   # Explicitely "cast" booleans to success/failure
+			res = Status.SUCCESS
+		elif res == false:
+			res = Status.FAILURE
+		else:
+			res = Status.SUCCESS # Returning anything else (null included) means we succeeded
 	if debug and res != Status.SUCCESS:
 		_print("Result %s" % _res_fmt(res))
 		#_print("BT: State dict for is %s" % [str(state)])
@@ -109,57 +110,91 @@ func tick() -> Status:
 	var res = eval(tree)
 	return res
 
-func _seq_eval_child(idx, child) -> Status:
-	current_path.append(idx)
-	var res = eval(child)
-	current_path.pop_back()
-	return res
-
 func sequence(...tail) -> Status:
-	var resume_idx = state_get("resume_child_idx")
-	if resume_idx != null:
-		var res = _seq_eval_child(resume_idx, tail[resume_idx])
-		if res == Status.SUCCESS and resume_idx < tail.size() - 1:
-			state_set("resume_child_idx", resume_idx + 1)
-		if res != Status.RUNNING and resume_idx == tail.size() - 1:
-			state_erase()
-		return res
+	tail = tail[0]
+	var current_idx = state_get("resume_child_idx")
+	if state_get("resume_child_idx") == null: current_idx = 0
 
-	for i in range(tail.size()):
-		var child = tail[i]
-		var res = _seq_eval_child(i, child)
-		if res == Status.RUNNING:
-			state_set("resume_child_idx", i)
-		if res != Status.SUCCESS:
-			return res
+	while current_idx < tail.size():
+		current_path.append(str(current_idx))
+		var res = eval(tail[current_idx])
+		current_path.pop_back()
+
+		match res:
+			Status.RUNNING:
+				state_set("resume_child_idx", current_idx)
+				return res
+			Status.FAILURE:
+				state_erase("resume_child_idx")
+				return res
+			Status.EXIT:
+				state_erase()
+				return res
+			Status.SUCCESS:
+				current_idx += 1
+
+	state_erase()
 	return Status.SUCCESS
 
 func selector(...tail) -> Status:
-	return Status.SUCCESS
+	tail = tail[0]
+	var current_idx = state_get("resume_child_idx")
+	if state_get("resume_child_idx") == null: current_idx = 0
+
+	while current_idx < tail.size():
+		current_path.append(str(current_idx))
+		var res = eval(tail[current_idx])
+		current_path.pop_back()
+
+		match res:
+			Status.RUNNING:
+				state_set("resume_child_idx", current_idx)
+				return res
+			Status.EXIT:
+				state_erase()
+				return res
+			Status.SUCCESS:
+				state_erase()
+				return res
+			Status.FAILURE:
+				current_idx += 1
+
+	state_erase()
+	return Status.FAILURE
+
+func always_fail(): return Status.FAILURE
+func always_succeed(): return Status.SUCCESS
+func always_exit(): return Status.EXIT
 
 func delay(duration_seconds: float, ..._args) -> Status:
-	if duration_seconds == 0: return Status.SUCCESS
-	if duration_seconds < 0: return Status.FAILURE
-
-	var timestamp = state_get("delay_start")
-	if timestamp == null:
-		state_set("delay_start", Time.get_ticks_msec())
-		return Status.RUNNING
+	if duration == 0: return Status.SUCCESS
+	if duration < 0: return Status.FAILURE
+	var last_time = state_get("last_time")
 	var cur_time = Time.get_ticks_msec()
-	var time_over = cur_time - timestamp >= duration_seconds * 1000
-	if time_over:
-		state_erase()
-		return Status.SUCCESS
-	return Status.RUNNING
-
-func cooldown(duration: float, ...tail) -> Status:
+	if last_time == null:
+		state_set("last_time", cur_time)
+		return Status.RUNNING
+	if cur_time - last_time < duration * 1000.0:
+		return Status.RUNNING
+	state_erase()
 	return Status.SUCCESS
+
 
 func cond(...tail) -> Status:
-	return Status.SUCCESS
+	return eval(tail)
+
+## Maybe not needed?
+func cooldown(duration: float, ..._tail) -> Status:
+	if debug:
+		_print("[color=red]cooldown is not implemented[/color]")
+	return Status.FAILURE
 
 func check_signal(signal_name: String, ...tail) -> Status:
-	return Status.SUCCESS
+	if debug:
+		_print("[color=red]check_signal is not implemented[/color]")
+	return Status.FAILURE
 
 func play_animation(anim_name: String, ...tail) -> Status:
-	return Status.SUCCESS
+	if debug:
+		_print("[color=red]play_animation not implemented[/color]")
+	return Status.FAILURE
