@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://css7rerbpydjf"]
+
+[ext_resource type="Script" uid="uid://dxyvqnnfs7axa" path="res://battle/battle.gd" id="1_mqutd"]
+
+[node name="Battle" type="Node3D" unique_id=1153339995]
+script = ExtResource("1_mqutd")
+graph_scale = 2.0
+graph_bounds = Rect2i(-5, -5, 10, 10)
+special_cell = Vector2i(1, -2)
+draw_edges = false
+draw_grid = true
+
+[node name="Square" type="Marker3D" parent="." unique_id=1537242707]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0003881, 0, 0.23480725)
