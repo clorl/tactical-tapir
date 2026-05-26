@@ -39,6 +39,13 @@ func _res_fmt(res: Variant) -> String:
 	if not res is int or res < Status.FAILURE or res > Status.COUNT: return str(res)
 	return Status.keys()[res]
 
+func _get_indent():
+	return " " + "│ ".repeat(current_path.size() - 1)
+
+func _print(...args):
+	args.push_front("[color=#5c5c5c][BT] %s[/color]" % _get_indent())
+	print_rich.callv(args)
+
 func _cbl_fmt(c):
 	if c is Callable:
 		var reg = RegEx.create_from_string("[^:]+::")
@@ -80,53 +87,49 @@ func eval(sexp) -> Status:
 	var head = sexp[0]
 	add_to_path(head)
 	if sexp.size() == 1:
-		if debug: print("BT: Calling %s with no arguments" % _cbl_fmt(head))
+		if debug: _print("Node \"%s\" no args" % _cbl_fmt(head))
 		res = head.call()
 	else:
 		var tail = sexp.slice(1)
-		if debug: print("BT: Calling %s with args: %s" % [_cbl_fmt(head), _cbl_fmt(tail)])
+		if debug: _print("Node \"%s\" args: %s" % [_cbl_fmt(head), _cbl_fmt(tail)])
 		res = head.callv(tail)
-	if debug:
-		print("BT: Result of %s is %s" % [_cbl_fmt(head), _res_fmt(res)])
-		print("BT: State dict for is %s" % [str(state)])
 	if res == null:
-		return Status.SUCCESS
+		res = Status.SUCCESS
+	if debug and res != Status.SUCCESS:
+		_print("Result %s" % _res_fmt(res))
+		#_print("BT: State dict for is %s" % [str(state)])
 	current_path.pop_back()
-	print(res, _cbl_fmt(sexp))
 	return res
 
 func tick() -> Status:
 	if debug:
-		print("  ")
-		print("BT: Tick")
+		print(" ")
+	print(Time.get_ticks_msec() / 1000.0)
 	if not tree.size(): return Status.SUCCESS
 	var res = eval(tree)
 	return res
 
 func _seq_eval_child(idx, child) -> Status:
 	current_path.append(idx)
-	var res = eval.callv(child)
-	print(res, _cbl_fmt(child))
+	var res = eval(child)
 	current_path.pop_back()
-	if res == Status.RUNNING:
-		return Status.RUNNING
-	else:
-		state_erase()
-		if res == 0:
-			print("oops", _cbl_fmt(child))
-		return res
+	return res
 
 func sequence(...tail) -> Status:
-	var idx = state_get("running_child_idx")
-	if idx != null:
-		var child = tail[idx]
-		return _seq_eval_child(idx, child)
+	var resume_idx = state_get("resume_child_idx")
+	if resume_idx != null:
+		var res = _seq_eval_child(resume_idx, tail[resume_idx])
+		if res == Status.SUCCESS and resume_idx < tail.size() - 1:
+			state_set("resume_child_idx", resume_idx + 1)
+		if res != Status.RUNNING and resume_idx == tail.size() - 1:
+			state_erase()
+		return res
 
 	for i in range(tail.size()):
 		var child = tail[i]
 		var res = _seq_eval_child(i, child)
 		if res == Status.RUNNING:
-			state_set("running_child_idx", i)
+			state_set("resume_child_idx", i)
 		if res != Status.SUCCESS:
 			return res
 	return Status.SUCCESS
