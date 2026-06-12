@@ -1,225 +1,258 @@
 @tool
 extends Node3D
-
-
-var graph_nodes : Dictionary[Vector2i, Vector3]
-var graph_edges : Array[GraphEdge]
-var graph_vertices := []
-
-@export var graph_scale := 10.0
 @export var graph_bounds := Rect2i(-5, -5, 5, 5)
+@export var cursor = 0
 
-@onready var square_node = $Square
-var square:
-	get(): return square_node.global_position
-var square_point := Vector2i()
+@export var enable_mod = false
 
-@export var special_cell := Vector2i()
+var coords := {}
+var graph := Graph.new()
+var dual_graph := Graph.new()
 
-@export_category("Debug Draw")
-@export var draw_centers := true
-@export var draw_edges := true
-@export var draw_grid := false
+var graph_modifiers: Array[GraphModifier]
+
+func _notification(what):
+	if what == NOTIFICATION_EDITOR_POST_SAVE:
+		generate_graph()
 
 func _ready():
 	generate_graph()
 
 func generate_graph():
-	graph_nodes.clear()
-	graph_edges.clear()
-	graph_vertices.clear()
+	graph_modifiers.clear()
+	for c in get_children():
+		if c is GraphModifier:
+			graph_modifiers.append(c)
+	graph = Graph.new()
+	dual_graph = Graph.new()
+	coords.clear()
 
-	#graph_nodes.set(Vector2i(0,0), Vector3(0.5*graph_scale,0,0))
+	for x in range(graph_bounds.position.x, graph_bounds.end.x + 1):
+		for y in range(graph_bounds.position.y, graph_bounds.end.y + 1):
+			var v = Vector2(x, y)
+			if not graph.add_unique_vertex(v + (Vector2(0.5, 0) if y % 2 != 0 else Vector2.ZERO)): continue
+			var idx = graph.vertices.size() - 1
+			coords.set(v, idx)
 
-	var dist := INF
-	for x in range(graph_bounds.position.x, graph_bounds.end.x):
-		for y in range(graph_bounds.position.y, graph_bounds.end.y):
-			var coord = Vector2i(x,y)
-			if graph_nodes.get(coord) != null: continue
-			var world_pos := Vector3(x* graph_scale,0,y*graph_scale)
-
-			if y % 2 == 0:
-				world_pos.x = (x+0.5) * graph_scale
-			graph_nodes.set(coord, world_pos)
-
-			# TMP
-			# var d = world_pos.distance_squared_to(square)
-			# if d < dist:
-			# 	dist = d
-			# 	square_point = coord
-			#/TMP
-
-			var hex_neighbors = [
-				Vector2i(-1, 0), Vector2i(1, 0),
+	for coord in coords.keys():
+		var idx = coords.get(coord)
+		var hex_neighbors = [
+				Vector2(1, 0),
+				Vector2(0, 1)
 			]
-			if y % 2 == 0:
-				hex_neighbors += [
-				Vector2i(0, 1), Vector2i(0, -1),
-				Vector2i(1,1),
-				Vector2i(1,-1)
+		if int(coord.y) % 2 != 0:
+			hex_neighbors += [
+				Vector2(0, 1), Vector2(0, -1),
+				Vector2(1,1),
+				Vector2(1,-1),
+			]
+
+		if coord == Vector2(0,0) and enable_mod:
+			hex_neighbors = [
+				Vector2(-1,1),
+				Vector2(1,0),
+				Vector2(0,-1),
+				Vector2(-1,0),
 				]
 
-			if coord == special_cell:
-				hex_neighbors = [
-					Vector2i(1, -1), Vector2i(1, 1), Vector2i(0, 1), Vector2i(0, -1)
-				]
-				
-			for vec in hex_neighbors:
-				if coord + vec == special_cell: continue
-				var edge = GraphEdge.new(coord, coord + vec)
-				if not graph_edges.any(edge.equals):
-					graph_edges.append(edge)
-					
-	for coord in graph_nodes.keys():
-		var r = graph_bounds.grow(-1)
-		if not r.has_point(coord): continue
-		var world_pos = graph_nodes.get(coord)
-		if world_pos == null: continue
-		var neighbors = get_neighbors(coord, true)
-		var bounds = []
-		for i in range(neighbors.size()):
-			var a = graph_nodes.get(neighbors[i])
-			var b = graph_nodes.get(neighbors[(i+1)%neighbors.size()])
-			if a == null or b == null: continue
-			var centroid = (world_pos + a + b) / 3.0
-			bounds.append(centroid)
-		for i in range(bounds.size()):
-			var a = bounds[i]
-			var b = bounds[(i+1)%bounds.size()]
-			if graph_vertices.has([a,b]) or graph_vertices.has([b,a]): continue
-			graph_vertices.append([a,b])
+		for vec in hex_neighbors:
+			if coord + vec == Vector2(0,0) and enable_mod: continue
+			var neighbor_idx = coords.get(coord + vec)
+			if neighbor_idx == null: continue
+			graph.add_unique_edge(idx, neighbor_idx)
+		#var neighbors = graph.get_neighbors(idx, true)
+
+		#var dual_face := []
+		#if coord != Vector2(0, 0): continue
+		# for i in range(neighbors.size()):
+		# 	var a = neighbors[i]
+		# 	var b = neighbors[(i+1)%neighbors.size()]
+		# 	var f = [idx, a, b]
+		# 	graph.add_unique_face(f)
+		# 	var c = graph.face_centroid(f)
+		# 	var centroid = Vector3(c.x, 0, c.y) * transform
+		# 	dual_face.append(dual_graph.add_unique_vertex(centroid))
+		# dual_graph.add_unique_face(dual_face)
+	graph.faces.clear()
+	graph.faces = graph.compute_faces()
 
 func _process(_dt):
-	generate_graph()
+	var world_graph = graph.to_world(transform)
+	var d = graph.get_dual().to_world(transform)
+	var r = Rect2i(graph_bounds)
+	r = r.grow(-2)
 
-	for i in range(graph_vertices.size()):
-		if not draw_grid: break
-		var a = graph_vertices[i][0]
-		var b = graph_vertices[i][1]
-		DebugDraw3D.draw_sphere(a, .01, Color.RED)
-		#DebugDraw3D.draw_text(a + Vector3.UP, str(i))
-		DebugDraw3D.draw_line(a,b)
-	# for v in graph_vertices:
-	# 	DebugDraw3D.draw_sphere(v, .01, Color.RED)
-	# 	DebugDraw3D.draw_text(v + Vector3.UP, str(i))
-	# 	i += 1
+	var bds = graph_bounds.grow(-2)
+	var rw = AABB()
+	rw.position = Vector3(bds.position.x, -1, bds.position.y) * transform
+	rw.end = Vector3(bds.end.x, 1, bds.end.y) * transform
+	#DebugDraw3D.draw_aabb(rw, Color.YELLOW)
 
-	for coord in graph_nodes.keys():
-		if not draw_centers: break
-		var node = graph_nodes.get(coord)
-		DebugDraw3D.draw_sphere(node, .1, Color.GREEN if coord == special_cell else Color.WHITE)
-		DebugDraw3D.draw_text(Vector3.UP + node, str(coord), 32, Color.GREEN if coord.y % 2 == 0 else Color.RED)
-	for edge in graph_edges:
-		if not draw_edges: break
-		#if edge.a != Vector2i.ZERO and edge.b != Vector2i.ZERO: continue
-		var a = graph_nodes.get(edge.a)
-		var b = graph_nodes.get(edge.b)
-		if not a or not b: continue
-		DebugDraw3D.draw_line(a, b, Color.WHITE)
-		# DebugDraw3D.draw_text((a + (b-a)/2.0) + Vector3.UP, str(edge))
+	for f in d.faces:
+		for i in range(f.size()):
+			var a = d.vertices[f[i]]
+			var b = d.vertices[f[(i+1)%f.size()]]
+			if not rw.has_point(a) or not rw.has_point(b): continue
+			DebugDraw3D.draw_line(a, b, Color.GREEN)
+			
+	return
 
-func get_vertices(coord: Vector2i) -> PackedVector3Array:
-	var pos = graph_nodes.get(coord)
-	if pos == null: return []
-	var pos_2d = Vector2(pos.x, pos.z)
+	for i in range(world_graph.vertices.size()):
+		var coord = graph.vertices[i]
+		if not r.has_point(coord): continue
+		var v = world_graph.vertices[i]
+		DebugDraw3D.draw_sphere(v, .1, Color.WHITE)
+		DebugDraw3D.draw_text(v + Vector3.UP, str(i))
 
-	var midpoints = []
-	for n in get_neighbors(coord):
-		var neighbor = graph_nodes.get(n)
-		if pos != null:
-			var mp = (pos + neighbor)/2.0
-			midpoints.append(mp)
-			#print("Point: ", n, " Midpoint: ", mp, " Angle: ", angle)
+	# for edge in world_graph.edges:
+	# 	break
+	# 	var a = world_graph.vertices[edge[0]]
+	# 	var b = world_graph.vertices[edge[1]]
+	# 	DebugDraw3D.draw_line(a, b, Color.WHITE)
+	for face in world_graph.faces:
+		DebugDraw3D.draw_sphere(world_graph.face_centroid(face), .02, Color.CYAN)
+		for i in range(face.size()):
+			var a = world_graph.vertices[face[i]]
+			var b = world_graph.vertices[face[(i+1)%face.size()]]
+			DebugDraw3D.draw_line(a, b, Color.WHITE)
 
-	midpoints.sort_custom(func(a, b):
-		var angle_a = pos_2d.angle_to_point(Vector2(a.x, a.z))
-		var angle_b = pos_2d.angle_to_point(Vector2(b.x, b.z))
-		return angle_a > angle_b
-	)
+class Graph extends RefCounted:
+	var vertices := []
+	var edges := []
+	var faces := []
 
-	var res = []
-	for i in range(midpoints.size()):
-		var new_mp = (midpoints[i] + midpoints[(i+1)%midpoints.size()]) / 2.0
-		res.append(new_mp)
+	func add_unique_vertex(v: Variant) -> int:
+		var idx = vertices.find(v)
+		if idx <= -1:
+			vertices.append(v)
+			return vertices.size() - 1
+		return idx
 
-	return res
+	func add_dissimilar_vertex(v: Variant, dist := .5) -> int:
+		var idx = vertices.find_custom(func(i):
+			return v.distance_to(i) <= dist
+		)
+		if idx <= -1:
+			vertices.append(v)
+			return vertices.size() - 1
+		return idx
 
-# func get_vertices(coord: Vector2i, box_size := 2000.0) -> PackedVector3Array:
-# 	var pos = graph_nodes.get(coord)
-# 	if pos == null: return []
+	func add_unique_edge(a: int, b: int) -> int:
+		if a == b: return false
+		var idx = edges.find_custom(func(edge):
+			return (edge[0] == a and edge[1] == b) or (edge[1] == a and edge[0] == b)
+			)
+		if idx <= -1:
+			edges.append([a, b])
+			return edges.size() - 1
+		return idx
 
-# 	var center := Vector2(pos.x, pos.z)
-# 	var half = box_size/2.0
-# 	var cell_polygon = PackedVector2Array([
-# 		center + Vector2(-half, -half),
-# 		center + Vector2(half, -half),
-# 		center + Vector2(half, half),
-# 		center + Vector2(-half, half),
-# 	])
+	func get_neighbors(idx: int, sorted := false) -> Array:
+		var neighbors = []
+		for edge in edges:
+			if edge[0] == idx:
+				neighbors.append(edge[1])
+			elif edge[1] == idx:
+				neighbors.append(edge[0])
 
-# 	for neighbor_coord in get_neighbors(coord):
-# 		var neigh_pos_3d = graph_nodes.get(neighbor_coord)
-# 		if neigh_pos_3d == null: continue
-# 		var neighbor = Vector2(neigh_pos_3d.x, neigh_pos_3d.z)
-# 		if center.is_equal_approx(neighbor): continue
-
-# 		var midpoint = (center + neighbor) / 2.0
-# 		var to_neighbor = (neighbor - center).normalized()
-# 		var tangent = Vector2(-to_neighbor.y, to_neighbor.x)
-# 		var clip_distance = box_size * 2.0
-# 		var cutter = PackedVector2Array([
-# 			midpoint,
-# 			midpoint + to_neighbor * clip_distance,
-# 			midpoint + to_neighbor * clip_distance + tangent * clip_distance,
-# 			midpoint + to_neighbor * clip_distance - tangent * clip_distance,
-# 		])
-
-# 		var clipped_results = Geometry2D.clip_polygons(cell_polygon, cutter)
-# 		if clipped_results.size() > 0:
-# 			cell_polygon = clipped_results[0]
-# 		else:
-# 			print("Error")
-# 			return []
-# 	var vertices = PackedVector3Array()
-# 	for vert in cell_polygon:
-# 		vertices.append(Vector3(vert.x, center.y, vert.y))
-# 	return vertices
-
-func get_neighbors(coord: Vector2i, sorted := false) -> PackedVector2Array:
-	var res = []
-	for edge in graph_edges:
-		if edge.a == coord:
-			if not res.has(edge.b): res.append(edge.b)
-		elif edge.b == coord:
-			if not res.has(edge.a): res.append(edge.a)
-
-	if sorted:
-		var world_pos = graph_nodes.get(coord)
-		if world_pos != null:
-			var pos = Vector2(world_pos.x, world_pos.z)
-			res.sort_custom(func(a, b):
-				var world_a = graph_nodes.get(a)
-				var world_b = graph_nodes.get(b)
-				if world_a == null: return true
-				if world_b == null: return false
-
-				var angle_a = pos.angle_to_point(Vector2(world_a.x, world_a.z))
-				var angle_b = pos.angle_to_point(Vector2(world_b.x, world_b.z))
+		if sorted:
+			var pos = vertices[idx]
+			neighbors.sort_custom(func(a, b):
+				var va = vertices[a]
+				var vb = vertices[b]
+				var angle_a = pos.angle_to_point(va)
+				var angle_b = pos.angle_to_point(vb)
 				return angle_a > angle_b
 			)
-		
-	return res
+		return neighbors
 
-class GraphEdge extends RefCounted:
-	var a: Vector2i
-	var b: Vector2i
+	func add_unique_face(face: Array) -> int:
+		var idx = faces.find_custom(func(f):
+			return face_equals(f, face)
+		)
+		if idx <= -1:
+			faces.append(face)
+			return faces.size() - 1
+		return idx
+	
 
-	func _init(vec_a: Vector2i, vec_b: Vector2i):
-		self.a = vec_a
-		self.b = vec_b
+	func face_equals(a: Array, b: Array) -> bool:
+		if a.size() != b.size(): return false
+		for v in a:
+			if not v in b: return false
+		return true
+			
 
-	func equals(other: GraphEdge):
-		return (a == other.a and b == other.b) or (b == other.a and a == other.b)
+	func face_centroid(face: Array):
+		var sum = vertices.get(face[0]) * 0.0
+		var count = 0
+		for idx in face:
+			var pos = vertices.get(idx)
+			if pos == null: continue
+			sum += pos
+			count += 1
+		return sum / count
 
-	func _to_string() -> String:
-		return "%d,%d\n%d,%d" % [a.x, a.y, b.x, b.y]
+	func vertex_get_faces(v: int) -> Array:
+		return faces.filter(func(f):
+			return v in f
+		)
+
+	func get_dual() -> Graph:
+		var dual = Graph.new()
+
+		for i in range(vertices.size()):
+			var v = vertices[i]
+			var centroids = vertex_get_faces(i).map(func (f): return face_centroid(f))
+			centroids.sort_custom(func(a, b):
+				var angle_a = vertices[i].angle_to_point(a)
+				var angle_b = vertices[i].angle_to_point(b)
+				return angle_a > angle_b
+			)
+			var face = []
+			for c in centroids:
+				var idx = dual.add_unique_vertex(c)
+				face.append(idx)
+			dual.add_unique_face(face)
+
+		return dual
+
+	func compute_faces() -> Array:
+		var res = []
+		var visited_edges := []
+		var sorted_neighbors := []
+		for i in range(vertices.size()):
+			sorted_neighbors.append(get_neighbors(i, true))
+
+		for start_node in range(vertices.size()):
+			var neighbors = sorted_neighbors[start_node]
+			for next_node in neighbors:
+				var edge = [start_node, next_node]
+				if visited_edges.has(edge): continue
+				var face = []
+				var current = start_node
+				var succ = next_node
+				while not visited_edges.has([current, succ]):
+					visited_edges.append([current, succ])
+					face.append(current)
+
+					var succ_neighbors = sorted_neighbors[succ]
+					var incoming_idx = succ_neighbors.find(current)
+					var next_idx = (incoming_idx + 1)%succ_neighbors.size()
+
+					current = succ
+					succ = succ_neighbors[next_idx]
+				if face.size() >= 3:
+					res.append(face)
+		return res
+
+	func to_world(transform := Transform3D()) -> Graph:
+		var graph = Graph.new()
+		for v in vertices:
+			graph.vertices.append(Vector3(v.x, 0, v.y) * transform)
+		graph.edges = self.edges.duplicate()
+		graph.faces = self.faces.duplicate()
+		return graph
+
+	func draw():
+		pass
