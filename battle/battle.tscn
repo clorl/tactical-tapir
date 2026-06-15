@@ -1,14 +1,15 @@
 [gd_scene format=3 uid="uid://css7rerbpydjf"]
 
-[ext_resource type="Script" uid="uid://dxyvqnnfs7axa" path="res://battle/battle.gd" id="1_mqutd"]
 [ext_resource type="Script" uid="uid://dmb2as3e78fyp" path="res://battle/graph_modifier.gd" id="2_tiqy5"]
+[ext_resource type="Script" uid="uid://drd371psevpb6" path="res://battle/battle_grid.gd" id="3_qubjc"]
 
 [node name="Battle" type="Node3D" unique_id=1153339995]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
-script = ExtResource("1_mqutd")
-graph_bounds = Rect2i(-5, -5, 10, 10)
-cursor = 14
 
-[node name="GraphModifier" type="Node3D" parent="." unique_id=1690714653]
+[node name="Grid" type="Node3D" parent="." unique_id=1942606614]
+script = ExtResource("3_qubjc")
+
+[node name="GraphModifier" type="Node3D" parent="Grid" unique_id=1690714653]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3145076, 0, 0.46113354)
 script = ExtResource("2_tiqy5")
+neighbor_count = 4
 metadata/_custom_type_script = "uid://dmb2as3e78fyp"

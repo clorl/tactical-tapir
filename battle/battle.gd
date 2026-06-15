@@ -1,8 +1,10 @@
 @tool
 extends Node3D
 @export var graph_bounds := Rect2i(-5, -5, 5, 5)
-@export var cursor = 0
+@export var base_neighbor_count := 6
 
+@export_group("Debug")
+@export var cursor = 0
 @export var enable_mod = false
 
 var coords := {}
@@ -77,6 +79,7 @@ func generate_graph():
 	graph.faces = graph.compute_faces()
 
 func _process(_dt):
+	return
 	var world_graph = graph.to_world(transform)
 	var d = graph.get_dual().to_world(transform)
 	var r = Rect2i(graph_bounds)
