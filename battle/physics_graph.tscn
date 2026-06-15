@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://drdgrctvx4mr1"]
+
+[ext_resource type="Script" uid="uid://befdwkpim3df" path="res://battle/physics_grid.gd" id="1_kbns1"]
+
+[node name="PhysicsGraph" type="Node2D" unique_id=2146651640]
+script = ExtResource("1_kbns1")
+size = Vector2(5, 5)
+repulsion_strength = 5.0

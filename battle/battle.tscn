@@ -10,6 +10,9 @@ script = ExtResource("3_qubjc")
 grid_size = Vector2i(5, 5)
 
 [node name="GraphModifier" type="Node3D" parent="Grid" unique_id=1690714653]
-transform = Transform3D(-0.28903192, 0, -0.95731956, 0, 1, 0, 0.95731956, 0, -0.28903192, -0.18860018, 0, -0.07339117)
+transform = Transform3D(-0.52695584, 0, -0.8498927, 0, 1, 0, 0.8498927, 0, -0.52695584, -3.2854133, 0, -0.0036566257)
 script = ExtResource("2_tiqy5")
+neighbors = 3
+apply_rotation = true
+apply_scale = true
 metadata/_custom_type_script = "uid://dmb2as3e78fyp"
