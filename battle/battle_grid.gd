@@ -3,10 +3,17 @@ extends Node3D
 class_name BattleGrid
 
 class CellInfo extends RefCounted:
+	var transform: Transform2D
+
 	var neighbors := 6
 
-	var neighbor_overrides = {}
-	var vertices_overrides = {}
+	func get_vertices() -> PackedVector2Array:
+		var v = []
+		var angle = (2.0*PI)/neighbors
+		var start_angle = -(angle /2.0)
+		for i in range(neighbors):
+			v.append(transform * Vector2.RIGHT.rotated(start_angle + angle * i))
+		return v
 
 class Grid extends RefCounted:
 	var size: Vector2
@@ -17,6 +24,8 @@ class Grid extends RefCounted:
 
 	var cell_overrides: Dictionary[Vector2, CellInfo]
 
+	var intersections: Dictionary[Vector3, Vector2]
+
 	func _init(n: int):
 		default_cell = CellInfo.new()
 		default_cell.neighbors = n
@@ -26,55 +35,75 @@ class Grid extends RefCounted:
 		grid_to_world.x = Vector2.RIGHT * dist
 		grid_to_world.y = Vector2.RIGHT.rotated(angle).normalized() * dist
 		world_to_grid = grid_to_world.affine_inverse()
-
+		
 	func _compute_overrides():
-		var new_overrides = cell_overrides
-
+		intersections.clear()
 		for pos in cell_overrides.keys():
 			var cell = cell_overrides[pos]
-			var neighbors = get_neighbors(pos, default_cell)
-			var square_vertices = get_vertices(pos)
-			var hex_vertices = [0, 1, 3, 4]
-			for i in range(hex_vertices.size()):
-				var square_vertex = square_vertices[i]
-				var hex_vindex = hex_vertices[i]
-				var override_map = get_vertex_index_for_neighbors(pos, hex_vindex, default_cell)
-				for neigh_idx in override_map.keys():
-					var neigh = neighbors[neigh_idx]
-					var new_vertex = override_map[neigh_idx]
-					var c = CellInfo.new()
-					c.vertices_overrides = {}
-					c.vertices_overrides.set(new_vertex, square_vertex)
-					print(neigh)
-					print(c.vertices_overrides)
-					print(override_map)
-					print(" ")
-					new_overrides.set(neigh, c)
-					
-		cell_overrides = new_overrides
-					
+			var wpos = grid_to_world * pos
+			var vertices = cell.get_vertices()
+			var orig_intersections = [
+				{ "coord": Vector2(1, -1), "north": true},
+				{ "coord": Vector2(0, 1), "north": false},
+				{ "coord": Vector2(0, 0), "north": true},
+				{ "coord": Vector2(-1, 1), "north": false},
+				{ "coord": Vector2(0, -1), "north": true},
+				{ "coord": Vector2(0, 0), "north": false},
+			]
 
-	func get_vertex_index_for_neighbors(pos: Vector2, vertex_idx: int, cell = null) -> Dictionary:
-		cell = get_cell_info(pos, cell)
-		vertex_idx = posmod(vertex_idx, cell.neighbors)
-		var res = {}
-		res[posmod(vertex_idx, cell.neighbors)] = posmod(vertex_idx + 4, cell.neighbors)
-		res[posmod(vertex_idx - 1, cell.neighbors)] = posmod(vertex_idx + 2, cell.neighbors)
-		return res
+			for inter in orig_intersections:
+				var inter_pos = get_intersection(inter.coord, inter.north)
+				var sorted = range(vertices.size())
+				sorted.sort_custom(func(a, b):
+					return vertices[a].distance_to(inter_pos) < vertices[b].distance_to(inter_pos)
+				)
+				set_intersection(wpos + vertices[sorted[0]], pos + inter.coord, inter.north)
+
+			# match cell.neighbors:
+			# 	3:
+			# 		set_intersection(wpos + vertices[0],pos + Vector2(1, -1), true)
+			# 		set_intersection(wpos + vertices[1],pos + Vector2(0, 1), false)
+			# 		set_intersection(wpos + vertices[2],pos + Vector2(-1, 1), false)
+			# 		set_intersection(wpos + vertices[2],pos + Vector2(0, -1), true)
+			# 		set_intersection(wpos + vertices[0], pos, false)
+			# 		set_intersection(wpos + vertices[1], pos, true)
+			# 	4: 
+			# 		set_intersection(wpos + vertices[0], pos + Vector2(1, -1), true)
+			# 		set_intersection(wpos + vertices[1], pos + Vector2(0, 1), false)
+			# 		set_intersection(wpos + vertices[2], pos + Vector2(-1, 1), false)
+			# 		set_intersection(wpos + vertices[3], pos + Vector2(0, -1), true)
+			# 		set_intersection(wpos + vertices[1], pos, true)
+			# 		set_intersection(wpos + vertices[3], pos, false)
+			# 	5:
+			# 		set_intersection(wpos + vertices[0], pos + Vector2(1, -1), true)
+			# 		set_intersection(wpos + vertices[1], pos + Vector2(0, 1), false)
+			# 		set_intersection(wpos + vertices[2], pos, true)
+			# 		set_intersection(wpos + vertices[3], pos + Vector2(-1, 1), false)
+			# 		set_intersection(wpos + vertices[3], pos + Vector2(0, -1), true)
+			# 		set_intersection(wpos + vertices[4], pos, false)
+
+	func get_intersection(cell_pos: Vector2, north := false, cell = null) -> Vector2:
+		var existing = intersections.get(Vector3(cell_pos.x, cell_pos.y, 1 if north else 0))
+		if existing != null:
+			return existing
+		cell = default_cell #get_cell_info(cell_pos, cell)
+		var angle = (2.0*PI)/cell.neighbors
+		return grid_to_world * cell_pos + Vector2.RIGHT.rotated((1.5 if north else -1.5) * angle)
+
+	func set_intersection(new_pos: Vector2, cell_pos: Vector2, north := false):
+		intersections.set(Vector3(cell_pos.x, cell_pos.y, 1 if north else 0), new_pos)
 
 	func get_vertices(pos: Vector2, cell = null) -> PackedVector2Array:
-		pos = grid_to_world * pos
-		cell = get_cell_info(pos, cell)
+		#pos = grid_to_world * pos
+		#cell = get_cell_info(pos, cell)
 		var v = []
-		var angle = (2.0*PI)/cell.neighbors
-		var start_angle = -angle/2.0
-		var start_vector = Vector2.RIGHT.rotated(start_angle)
-		for i in range(cell.neighbors):
-			v.append(pos + start_vector.rotated(angle * i))
-		
-		for idx in cell.vertices_overrides.keys():
-			v[idx] = cell.vertices_overrides[idx]
-			
+		v.append(get_intersection(pos + Vector2(1, -1), true))
+		v.append(get_intersection(pos + Vector2(0, 1), false))
+		v.append(get_intersection(pos, true))
+		v.append(get_intersection(pos + Vector2(-1, 1), false))
+		v.append(get_intersection(pos + Vector2(0, -1), true))
+		v.append(get_intersection(pos, false))
+		#v.append(get_intersection(pos, true))
 		return v
 
 	func get_neighbors(pos: Vector2, cell = null) -> PackedVector2Array:
@@ -102,8 +131,6 @@ class Grid extends RefCounted:
 			return fallback
 		var c = cell_overrides.get(pos)
 		return c if c != null else default_cell
-		
-		
 
 @export_tool_button("Generate") var _generate_btn = generate
 
@@ -131,29 +158,33 @@ func generate():
 		var pos_2d = grid.world_to_grid * Vector2(c.position.x, -c.position.z)
 		pos_2d.x = round(pos_2d.x)
 		pos_2d.y = round(pos_2d.y)
-		var cell_info = CellInfo.new()
-		cell_info.neighbors = c.neighbors
-		grid.cell_overrides.set(pos_2d, cell_info)
-		pos_2d = grid.grid_to_world * pos_2d
 		modifiers.set(pos_2d, c)
-	# var test = CellInfo.new()
-	# test.vertices_overrides = {
-	# 	2: Vector2(2, 2)
-	# }
-	#grid.cell_overrides.set(Vector2(0, 0), test)
-	grid._compute_overrides()
+		var cell = CellInfo.new()
+		cell.neighbors = c.neighbors
+		if c.apply_rotation:
+			cell.transform = cell.transform.rotated(c.rotation.y)
+		if c.apply_scale:
+			cell.transform = cell.transform.scaled(Vector2(c.scale.x, c.scale.z))
+		if c.apply_position:
+			var wpos = grid.grid_to_world * pos_2d
+			var offset = Vector2(c.position.x, -c.position.z) - Vector2(wpos.x, wpos.y)
+			cell.transform = cell.transform.translated(offset)
+
+		grid.cell_overrides.set(pos_2d, cell)
+		grid._compute_overrides()
 
 func _process(_dt):
-	DebugDraw3D.draw_aabb(grid_aabb, Color.YELLOW)
-	DebugDraw3D.draw_arrow(Vector3.ZERO, xz(grid.grid_to_world.x), Color.RED, .1)
-	DebugDraw3D.draw_arrow(Vector3.ZERO, xz(grid.grid_to_world.y), Color.GREEN, .1)
+	generate()
+	#DebugDraw3D.draw_aabb(grid_aabb, Color.YELLOW)
+	#DebugDraw3D.draw_arrow(Vector3.ZERO, xz(grid.grid_to_world.x), Color.RED, .1)
+	#DebugDraw3D.draw_arrow(Vector3.ZERO, xz(grid.grid_to_world.y), Color.GREEN, .1)
 	for x in range(-grid_size.x, grid_size.x + 1):
 		for y in range(-grid_size.y, grid_size.y + 1):
-			draw_vertices_2d(grid.get_vertices(Vector2(x,y)), Color.WHITE, str(x, ";", y))
+			draw_vertices_2d(grid.get_vertices(Vector2(x,y)), Color.WHITE)
 	for coord in modifiers.keys():
 		var mod = modifiers[coord]
 		DebugDraw3D.draw_sphere(mod.global_position, .01, Color.CYAN)
-		DebugDraw3D.draw_line(mod.global_position, xz(coord), Color.CYAN)
+		DebugDraw3D.draw_line(mod.global_position, xz(grid.grid_to_world * coord), Color.CYAN)
 
 #### HELPERS
 
