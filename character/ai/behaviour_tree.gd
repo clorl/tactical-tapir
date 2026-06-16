@@ -166,7 +166,7 @@ func always_fail(): return Status.FAILURE
 func always_succeed(): return Status.SUCCESS
 func always_exit(): return Status.EXIT
 
-func delay(duration_seconds: float, ..._args) -> Status:
+func delay(duration: float, ..._args) -> Status:
 	if duration == 0: return Status.SUCCESS
 	if duration < 0: return Status.FAILURE
 	var last_time = state_get("last_time")
